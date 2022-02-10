@@ -4,7 +4,7 @@ import { useReducer } from "react";
 import { useState } from "react/cjs/react.production.min";
 
 
-const Login = () => {
+const Login = (props) => {
   const initialState = {
     email: "",
     password:"",
@@ -38,9 +38,28 @@ const Login = () => {
     dispatch({type:"reset"});
 
   }
+  const onSubmit = (event) => {
+		event.preventDefault(); //to stop the default behavior of the form
+     const loggedin = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ email: state.email, password: state.password }),
+		};
+		fetch("https://reqres.in/api/login", loggedin).then((response) => {
+			if (response.status === 200) {
+				console.log("Successfully logged in");
+				props.nextPage();
+			} else {
+				alert("Wrong Input");
+			}
+
+		});
+  };
     return(
     <Container className="text-centre col-md4">
-        <Form>
+        <Form onSubmit={onSubmit}>
   <Row form>
     <Col md={6}>
       <FormGroup>
